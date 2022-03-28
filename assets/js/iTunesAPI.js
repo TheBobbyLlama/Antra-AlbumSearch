@@ -8,6 +8,8 @@ class iTunesAPI {
 	}
 	searchArtist(searchItem) {
 		return new Promise((res, rej) => {
+			// TODO - This fails for Apple devices!
+			// GET musics://mzstoreservices-int.dslb.apple.com/search?term=Gaga&media=music&entity=album&attribute=artistTerm&limit=200&callback=jsonp_1648499586626_43620 net::ERR_UNKNOWN_URL_SCHEME
 			fetchJsonp(`${this._endpoint}/search?term=${encodeURI(searchItem)}&media=music&entity=album&attribute=artistTerm&limit=200`)
 			.then(response => {
 				if (response.ok) {
