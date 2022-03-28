@@ -10,14 +10,17 @@
 <body>
 	<main class="search-container">
 		<header class="search-container__header">
-			<form>
-				<input class="input-search" type="text" placeholder="Search Artist..." />
+			<form id="artist-search-form" class="search-form">
+				<input class="search-form__text" type="text" placeholder="Search Artist..." />
+				<button class="search-form__button" type="submit"></button>
+				<div class="search-form__warning hidden" data-key="empty">Please enter an artist name.</div>
 			</form>
 		</header>
-		<section class="search-container__results">
+		<section id="artist-search-results" class="search-container__results">
 			TODO - Results!
 		</section>
 	</main>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.0.6/fetch-jsonp.min.js"></script>
 	<script src="./assets/js/iTunesAPI.js"></script>
 	<script src="./assets/js/index.js"></script>
 </body>
