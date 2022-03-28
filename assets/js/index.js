@@ -70,7 +70,6 @@ function generateAlbumCardHtml(album) {
 }
 
 function generateAlbumSearchResults(searchTerm, data) {
-	console.log(data);
 	const cards = data.results.map(item => generateAlbumCardHtml(item));
 
 	return `<h2>${data.resultCount} result${(data.resultCount !== 1) ? "s" : ""} for "${searchTerm}"</h2>

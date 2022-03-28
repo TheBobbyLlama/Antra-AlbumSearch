@@ -8,7 +8,7 @@ class iTunesAPI {
 	}
 	searchArtist(searchItem) {
 		return new Promise((res, rej) => {
-			fetchJsonp(`${this._endpoint}/search?term=${encodeURI(searchItem)}&media=music&entity=album&attribute=artistTerm&limit=200`)
+			fetch(`${this._endpoint}/search?term=${encodeURI(searchItem)}&media=music&entity=album&attribute=artistTerm&limit=200`)
 			.then(response => {
 				if (response.ok) {
 					return response.json();
