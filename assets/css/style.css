@@ -5,8 +5,12 @@
 }
 
 :root {
+	--album-card-height: 240px;
+	--album-card-width: 160px;
 	--color-background: #181818;
 	--color-background-text: white;
+	--color-content-background: white;
+	--color-content-text: black;
 	--color-style: #608060;
 	--color-style-border: #406040;
 }
@@ -17,6 +21,10 @@ button {
 
 button[disabled] {
 	pointer-events: none;
+}
+
+h1, h2, h3, h4, h5 {
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 /* ---- LAYOUT ---- */
@@ -48,6 +56,48 @@ button[disabled] {
 	flex-grow: 1;
 	overflow-y: auto;
 	padding: 20px;
+}
+
+.album-results {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: center;
+	margin: 10px 0;
+	max-width: 1000px;
+}
+
+.album-card {
+	background-color: var(--color-content-background);
+	border: 2px solid var(--color-style-border);
+	border-radius: 4px;
+	color: var(--color-content-text);
+	display: flex;
+	flex-direction: column;
+	min-height: var(--album-card-height);
+	opacity: 0.75;
+	overflow: hidden;
+	text-decoration: none;
+	transition: 0.5s border-color, 0.5s opacity;
+	width: var(--album-card-width);
+}
+
+.album-card:hover {
+	border-color: var(--color-style);
+	opacity: 1;
+}
+
+.album-card img {
+	height: var(--album-card-width);
+	width: var(--album-card-width);
+}
+
+.album-card h3 {
+	margin: 4px 4px 0 4px;
+}
+
+.album-card h4 {
+	margin: 4px 4px 0 4px;
 }
 
 /* ---- REUSABLE CLASSES ---- */

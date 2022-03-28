@@ -18,11 +18,12 @@ function doArtistSearch(e) {
 		showWarning("");
 
 		musicAPI.searchArtist(artist).then(_ => {
-			console.log(musicAPI.data);
 			setSearchControls(false);
+			render(domLookup.elementResultPane,
+				generateAlbumSearchResults(artist, musicAPI.data));
 		}, _ => {
-			console.log("Error!")
 			setSearchControls(false);
+			showAPIError();
 		});
 
 		showLoadingSpinner();
@@ -53,6 +54,29 @@ function showLoadingSpinner() {
 		`<div class="simple-center">
 			<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
 		</div>`);
+}
+
+function showAPIError() {
+	render(domLookup.elementResultPane,
+		`<h2>An error has occurred.  Please try again later.</h2>`);
+}
+
+function generateAlbumCardHtml(album) {
+	return `<a class="album-card" href="${album.collectionViewUrl}" target="_blank">
+		<img src="${album.artworkUrl100}" title="Album Art" />
+		<h3>${album.collectionCensoredName}</h3>
+		<h4>${album.artistName}</h4>
+	</a>`;
+}
+
+function generateAlbumSearchResults(searchTerm, data) {
+	console.log(data);
+	const cards = data.results.map(item => generateAlbumCardHtml(item));
+
+	return `<h2>${data.resultCount} result${(data.resultCount !== 1) ? "s" : ""} for "${searchTerm}"</h2>
+	<div class="album-results">
+		${cards.join("")}
+	</div>`;
 }
 
 /* ---- DOM MANIPULATION ---- */
