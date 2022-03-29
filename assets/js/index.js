@@ -8,8 +8,17 @@ const domLookup = {
 	elementSearchWarnings: document.querySelectorAll('#artist-search-form .search-form__warning')
 }
 
+function extractArtists(data) {
+	const searchTerm = domLookup.elementSearchText.value.toLowerCase();
+
+	return data.results
+		.map(album => album.artistName) // Get artist names
+		.filter((artist, index, self) => { return ((self.indexOf(artist) === index) &&  // Distinct
+													(artist.toLowerCase() !== searchTerm)); }); // Not exact match to our search term.
+}
+
 function doArtistSearch(e) {
-	e.preventDefault();
+	e?.preventDefault();
 	
 	const artist = domLookup.elementSearchText.value;
 
@@ -47,6 +56,17 @@ function showWarning(key) {
 	})
 }
 
+function searchResultsClick(e) {
+	switch (e.target.tagName) {
+		case "BUTTON":
+			if (e.target.dataset.artist) {
+				domLookup.elementSearchText.value = e.target.dataset.artist;
+				doArtistSearch();
+			}
+			break;
+	}
+}
+
 /* ---- CONTENT GENERATION ---- */
 function showLoadingSpinner() {
 	// From https://loading.io/css/
@@ -61,6 +81,25 @@ function showAPIError() {
 		`<h2>An error has occurred.  Please try again later.</h2>`);
 }
 
+function generateArtistOptionHtml(artist) {
+	return `<button type="button" title="${artist}" data-artist="${artist}">${artist}</button>`;
+}
+
+function generateArtistOptions(artists) {
+	if (artists.length) {
+		const artistButtons = artists.map(artist => generateArtistOptionHtml(artist));
+
+		return `<div class="option-results">
+			<h3>Narrow Your Search</h3>
+			<div class="option-results__display">
+				${artistButtons.join("")}
+			</div>
+		</div>`
+	} else {
+		return "";
+	}
+}
+
 function generateAlbumCardHtml(album) {
 	return `<a class="album-card" href="${album.collectionViewUrl}" target="_blank">
 		<img src="${album.artworkUrl100}" title="Album Art" />
@@ -71,8 +110,10 @@ function generateAlbumCardHtml(album) {
 
 function generateAlbumSearchResults(searchTerm, data) {
 	const cards = data.results.map(item => generateAlbumCardHtml(item));
+	const artists = extractArtists(data);
 
 	return `<h2>${data.resultCount} result${(data.resultCount !== 1) ? "s" : ""} for "${searchTerm}"</h2>
+	${generateArtistOptions(artists)}
 	<div class="album-results">
 		${cards.join("")}
 	</div>`;
@@ -85,6 +126,7 @@ function render(element, content) {
 
 function bindDomEvents() {
 	domLookup.elementSearchForm.addEventListener("submit", doArtistSearch);
+	domLookup.elementResultPane.addEventListener("click", searchResultsClick);
 }
 
 bindDomEvents();
