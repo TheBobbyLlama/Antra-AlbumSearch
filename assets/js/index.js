@@ -8,6 +8,8 @@ const domLookup = {
 	elementSearchWarnings: document.querySelectorAll('#artist-search-form .search-form__warning')
 }
 
+let displayCount;
+
 function extractArtists(data) {
 	const searchTerm = domLookup.elementSearchText.value.toLowerCase();
 
@@ -17,7 +19,7 @@ function extractArtists(data) {
 													(artist.toLowerCase() !== searchTerm)); }); // Not exact match to our search term.
 }
 
-function doArtistSearch(e) {
+function doArtistSearch(e, count) {
 	e?.preventDefault();
 	
 	const artist = domLookup.elementSearchText.value;
@@ -27,6 +29,9 @@ function doArtistSearch(e) {
 		showWarning("");
 
 		musicAPI.searchArtist(artist).then(_ => {
+			displayCount = count || 10;
+			localStorage.setItem("lastSearch", artist);
+			localStorage.setItem("lastSearchCount", displayCount);
 			setSearchControls(false);
 			render(domLookup.elementResultPane,
 				generateAlbumSearchResults(artist, musicAPI.data));
@@ -62,6 +67,11 @@ function searchResultsClick(e) {
 			if (e.target.dataset.artist) {
 				domLookup.elementSearchText.value = e.target.dataset.artist;
 				doArtistSearch();
+			} else if (e.target.dataset.action === "load-more") {
+				displayCount += 10;
+				localStorage.setItem("lastSearchCount", displayCount);
+				render(domLookup.elementResultPane,
+					generateAlbumSearchResults(domLookup.elementSearchText.value, musicAPI.data));
 			}
 			break;
 	}
@@ -82,7 +92,7 @@ function showAPIError() {
 }
 
 function generateArtistOptionHtml(artist) {
-	return `<button type="button" title="${artist}" data-artist="${artist}">${artist}</button>`;
+	return `<button type="button" class="btn--simple" title="${artist}" data-artist="${artist}">${artist}</button>`;
 }
 
 function generateArtistOptions(artists) {
@@ -109,14 +119,15 @@ function generateAlbumCardHtml(album) {
 }
 
 function generateAlbumSearchResults(searchTerm, data) {
-	const cards = data.results.map(item => generateAlbumCardHtml(item));
+	const cards = data.results.map(item => generateAlbumCardHtml(item)).slice(0, displayCount);
 	const artists = extractArtists(data);
 
 	return `<h2>${data.resultCount} result${(data.resultCount !== 1) ? "s" : ""} for "${searchTerm}"</h2>
 	${generateArtistOptions(artists)}
 	<div class="album-results">
 		${cards.join("")}
-	</div>`;
+	</div>
+	${(displayCount < data.results.length) ? `<button class="btn--simple" data-action="load-more">Load More</button>` : ""}`;
 }
 
 /* ---- DOM MANIPULATION ---- */
@@ -130,3 +141,9 @@ function bindDomEvents() {
 }
 
 bindDomEvents();
+
+domLookup.elementSearchText.value = localStorage.getItem("lastSearch");
+
+if (domLookup.elementSearchText.value) {
+	doArtistSearch(null, localStorage.getItem("lastSearchCount"));
+}

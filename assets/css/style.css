@@ -88,23 +88,10 @@ h1, h2, h3, h4, h5 {
 }
 
 .option-results__display button {
-	background-color: var(--color-artist-option-button-background);
-	border: 2px solid var(--color-style-border);
-	border-radius: 14px;
-	color: var(--color-artist-option-button-text);
-	height: 28px;
 	overflow: hidden;
-	margin: 0 4px;
 	max-width: 180px;
-	padding: 4px 14px;
 	text-overflow: ellipsis;
-	transition: 0.5s background-color, 0.5s border-color, 0.5s color;
 	white-space: nowrap;
-}
-
-.option-results__display button:hover {
-	background-color: var(--color-artist-option-button-background-highlight);
-	border-color: var(--color-style);
 }
 
 .album-results {
@@ -153,6 +140,23 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ---- REUSABLE CLASSES ---- */
+
+.btn--simple {
+	background-color: var(--color-artist-option-button-background);
+	border: 2px solid var(--color-style-border);
+	border-radius: 14px;
+	color: var(--color-artist-option-button-text);
+	height: 28px;
+	margin: 0 4px;
+	padding: 4px 14px;
+	transition: 0.5s background-color, 0.5s border-color, 0.5s color;
+	white-space: nowrap;
+}
+
+.btn--simple:hover {
+	background-color: var(--color-artist-option-button-background-highlight);
+	border-color: var(--color-style);
+}
 
 .search-form {
 	position: relative;
